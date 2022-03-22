@@ -6,6 +6,8 @@ router.get('/', (req, res, next) => {
   res.json('All good in here');
 });
 
+const fileUploader = require("../config/cloudinary.config");
+
   // Ruta para ver todas las recetas
   router.get('/recipes/all', async (req, res) => {
     try {
@@ -16,22 +18,33 @@ router.get('/', (req, res, next) => {
     }
   });
 
+  // Ruta cloudinary
+  router.post("/upload", fileUploader.single("imageUrl"), (req, res, next) => {
+  console.log("file is: ", req.file)
+ 
+  if (!req.file) {
+    next(new Error("No file uploaded!"));
+    return;
+  }
+    res.json({ fileUrl: req.file.path });
+});
+
   // Ruta POST para crear nuevas recetas
   router.post('/recipes/new', isAuthenticated, async (req, res, next) => {
     const userId = req.payload._id;
-    const { name, preparationTime, coockingTime, totalTime, level, category, ingredients, description, image } = req.body;
+    console.log('Llega al backend', req.body)
+    const { name, preparationTime, diners, level, category, ingredients, description, imageUrl } = req.body;
 
     try {
       const newRecipe = await Recipe.create({
         name, 
         preparationTime, 
-        coockingTime, 
-        totalTime, 
+        diners, 
         level, 
         category, 
         ingredients, 
         description, 
-        image,
+        imageUrl,
         user: userId,
       });
       res.json({newRecipe});
@@ -63,34 +76,33 @@ router.get('/', (req, res, next) => {
   });
 
   // Ruta para editar una receta
-  router.post('/recipes/edit/:id', isAuthenticated, async (req, res, next) => {
+  router.put('/recipes/edit/:id', isAuthenticated, async (req, res, next) => {
     const recipeId = req.params.id;
-    const { name, preparationTime, coockingTime, totalTime, level, category, ingredients, description, image} = req.body;
+    const { name, preparationTime, diners, level, category, ingredients, description, imageUrl} = req.body;
     try {
       const recipe = await Recipe.findByIdAndUpdate(
         recipeId,
         {
           name, 
           preparationTime, 
-          coockingTime, 
-          totalTime, 
+          diners,
           level, 
           category, 
           ingredients, 
           description, 
-          image,
+          imageUrl,
         },
         { new: true },
       );
       console.log('Updated', recipe);
-      res.json({recipe});
+      res.json(recipe);
     } catch (e) {
       next(e);
     }
   });
 
   // Ruta para borrar una receta
-  router.get('/recipes/delete/:id', isAuthenticated, async (req, res, next) => {
+  router.delete('/recipes/delete/:id', isAuthenticated, async (req, res, next) => {
     const recipeId = req.params.id;
     try {
       const recipe = await Recipe.findByIdAndDelete(recipeId);

@@ -6,19 +6,15 @@ const recipeSchema = new Schema(
     name: {
       type: String,
       required: [true, 'title is required'],
+      imageUrl: String
     },
 
     preparationTime: {
-      type: Number,
+      type: String,
       // required: [true, 'number is required'],
     },
 
-    cookingTime: {
-      type: Number,
-     //  required: [true, 'number is required'],
-    },
-
-    totalTime: {
+    diners: {
       type: Number,
      //  required: [true, 'number is required'],
     },
@@ -42,11 +38,15 @@ const recipeSchema = new Schema(
       // required: [true, 'description pages is required'],
     },
 
+    imageUrl: {
+      type: String,
+
+    },
+
     user: {
     type: mongoose.Schema.ObjectId,
     ref: 'User'
     },
-    image: { type: String },
   },
 );
 module.exports = model('Recipe', recipeSchema);
