@@ -55,8 +55,6 @@ npm run start
 | Log out | POST | /auth/logout | No | | / |
 | Sign up | POST | /auth/signup | No | { email, password } | / |
 | Sign up form | POST | /auth/signup | No | | / |
-​
-​
 
 ## Links
 
