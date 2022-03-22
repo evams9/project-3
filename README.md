@@ -56,8 +56,3 @@ npm run start
 | Sign up | POST | /auth/signup | No | { email, password } | / |
 | Sign up form | POST | /auth/signup | No | | / |
 
-## Links
-
-- [Slides]()
-- [Frontend repository]()
-- [Deployed version]()
